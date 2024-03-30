@@ -1,35 +1,94 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Layouts
+import RootLayout from "./layouts/root-layout";
+const LoginLayout = lazy(() => import("./layouts/login-layout"))
+// Pages
+const Home = lazy(() => import("./pages/home"));
+const Error =lazy(() => import("./pages/error"));
+const Taxis = lazy( () => import("./pages/taxis"));
+const About = lazy(() => import("./pages/about"));
+const Passenger =lazy(() => import("./pages/passenger"))
+const Login = lazy(() => import("./pages/login"))
 
+// Loader components
+import Loader from "./components/loader/loader";
+
+
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />,
+    errorElement: (
+      <Suspense fallback={<Loader />}>
+        <Error />
+      </Suspense>
+    ),
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<Loader />}>
+            <Home />
+          </Suspense>
+        )
+      },
+      {
+        path: '/taxis',
+        element: (
+          <Suspense fallback={<Loader />}>
+            <Taxis />
+          </Suspense>
+          )
+      },
+      {
+        path: '/about',
+        element: (
+          <Suspense fallback={<Loader />}>
+            <About />
+          </Suspense>
+        )
+      },
+      {
+        path: '/passenger',
+        element: (
+          <Suspense fallback={<Loader />}>
+            <Passenger />
+          </Suspense>
+        )
+      }
+    ]
+  },
+  {
+    path: '/login',
+    element: (
+      <Suspense fallback={<Loader />}>
+        <LoginLayout />
+      </Suspense>
+    ),
+    errorElement: (
+      <Suspense fallback={<Loader />}>
+        <Error />
+      </Suspense>
+    ),
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<Loader />}>
+            <Login />
+          </Suspense>
+        )
+      }
+    ]
+  }
+])
+
+
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <RouterProvider router={router} />
   )
 }
-
-export default App
