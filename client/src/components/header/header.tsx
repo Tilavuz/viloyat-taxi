@@ -6,7 +6,7 @@ import { CircleUser } from "lucide-react"
 
 export default function Header() {
   return (
-    <header className="yfixed ybg-[#000] yw-[100vw] ypy-2">
+    <header className="yfixed ybg-[#000] yw-[100vw] ypy-2 yz-10">
       <nav className="ycontainer yflex yjustify-between">
         <Button variant='link'>
           <Link className="ytext-2xl yfont-bold ytext-white" to='/'>Viloyat<span className="ytext-[#facc15]">Taxi</span></Link>

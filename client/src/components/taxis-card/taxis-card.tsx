@@ -52,7 +52,7 @@ export default function TaxisCard() {
                         <CircleUser size={44}/>
                         <span className="yflex yflex-col">
                             <span className="yfont-bold ytext-sm">Shavqiddin</span>
-                            <span className="ytext-sm">Taxi</span>
+                            <span className="ytext-sm">Haydovchi</span>
                         </span>
                     </li>
                     <li>
