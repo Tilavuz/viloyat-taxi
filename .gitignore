@@ -1,16 +1,6 @@
 # Node.js dependensiyalarini saqlash joyi
-node_modules/
+./server/node_modules/
 
 # Lokal konfiquratsiya fayllari (masalan, .env)
-.env
+./server/.env
 
-# Log fayllari
-logs/
-*.log
-
-# Derijalar va kengaytirilgan fayllar
-dist/
-*.exe
-*.msi
-*.zip
-*.tar.gz
