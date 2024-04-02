@@ -1,38 +1,6 @@
-const User = require('../../models/User')
+const User = require('../models/User')
 const { bot } = require('../bot')
 
-const start = async (msg) => {
-
-    const chatId = msg.from.id
-    const user = await User.findOne({ chatId }).lean()
-
-    if(!user) {
-        const newUser = new User({
-            chatId,
-            name: '',
-            phone: '',
-            driver: null,
-            carName: '',
-            carNumber: '',
-            action: 'request_contact',
-        })
-        await newUser.save()
-
-        bot.sendMessage(chatId, 'Botdan foydalanish uchun telefon raqamingizni yuboring!', {
-            reply_markup: {
-                keyboard: [
-                    [
-                        {
-                            text: 'Send phone number',
-                            request_contact: true
-                        }
-                    ]
-                ],
-                resize_keyboard: true
-            }
-        })
-    }
-}
 
 const requestContact = async (msg) => {
     
@@ -62,7 +30,13 @@ const requestContact = async (msg) => {
 const getName = async (msg) => {
 
     const chatId = msg.from.id
-    const text = msg.text
+    let text = msg.text.trim()
+    const pattern = /^[a-zA-Z]+$/
+
+    if(!pattern.test(text)) {
+        return bot.sendMessage(chatId, 'Ismingiz faqatgina harflardan tashkil topishi kerak!')
+    }
+
     let user = await User.findOne({ chatId }).lean()
     user.name = text.trim()
     user.action = 'driver'
@@ -101,6 +75,12 @@ const isDriver = async (query) => {
 const getCarName = async (msg) => {
     const chatId = msg.from.id
     const text = msg.text
+    const pattern = /^[a-zA-Z0-9\s]+$/; 
+
+    if(!pattern.test(text)) {
+        return bot.sendMessage(chatId, 'Mashina nomi faqatgina harflar va raqamlardan tashkil topishi kerak!')
+    }
+
     let user = await User.findOne({ chatId }).lean()
     
     user.action = 'car-number'
@@ -111,13 +91,87 @@ const getCarName = async (msg) => {
 
 const getCarNumber = async (msg) => {
     const chatId = msg.from.id
-    const text = msg.text
-    let user = await User.findOne({ chatId }).lean()
+    const text = msg.text.toUpperCase()
+    const pattern = /^[a-zA-Z0-9]+$/; 
 
+    if(!pattern.test(text)) {
+        return bot.sendMessage(chatId, 'Mashina raqami faqatgina harflar va raqamlardan tashkil topishi kerak!')
+    }
+
+    let user = await User.findOne({ chatId }).lean()
     user.action = '/login'
     user.carNumber = text
     await User.findByIdAndUpdate(user._id, user, { new: true })
     bot.sendMessage(chatId, 'Bot ishga tushdi.')
 }
+
+
+
+const start = async (msg) => {
+
+    const chatId = msg.from.id
+    const user = await User.findOne({ chatId }).lean()
+
+    if(!user) {
+        const newUser = new User({
+            chatId,
+            name: '',
+            phone: '',
+            driver: null,
+            carName: '',
+            carNumber: '',
+            action: 'request_contact',
+        })
+        await newUser.save()
+
+        bot.sendMessage(chatId, 'Botdan foydalanish uchun telefon raqamingizni yuboring!', {
+            reply_markup: {
+                keyboard: [
+                    [
+                        {
+                            text: 'Send phone number',
+                            request_contact: true
+                        }
+                    ]
+                ],
+                resize_keyboard: true
+            }
+        })
+    }else if(user && !user.phone) {
+        bot.sendMessage(chatId, 'Botga telefon raqamingizni yuboring!', {
+            reply_markup: {
+                keyboard: [
+                    [
+                        {
+                            text: 'Send phone number',
+                            request_contact: true
+                        }
+                    ]
+                ],
+                resize_keyboard: true
+            }
+        })
+    }
+
+    if(user) {
+        if(user.name && user.driver === null) {
+            bot.sendMessage(chatId, 'Haydovchimisiz ?', {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{text: 'Ha', callback_data: 'yes'}, {text: 'Yo\'q', callback_data: 'no'}],
+                    ]
+                }
+            })
+        }
+        if(user.driver && !user.carName) {
+            getCarName(msg)
+        }
+        if(user.carName && !user.carNumber) {
+            getCarNumber(msg)
+        }
+    }
+}
+
+
 
 module.exports = { start, requestContact, getName, isDriver, getCarName, getCarNumber }

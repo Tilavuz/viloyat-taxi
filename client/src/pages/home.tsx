@@ -31,7 +31,7 @@ export default function Home() {
         <div className="yflex yflex-col yitems-center ymax-w-[440px] ygap-4">
           <h2 className="yfont-bold ytext-6xl ytext-[#44403c] ytext-center">Biz haqidimizda</h2>
           <p className="ytext-2xl ytext-center">Bizning maqsadimiz sizga qulaylik yaratib berish. Biz bilan tez qulay hamroh toping.</p>
-          <Link to='/about' className="yfont-bold ytext-2xl yrounded-md ypx-12 ypy-4 ybg-black ytext-white">Biz haqimizda</Link>
+          <Link to='/about' className="yfont-bold ytext-2xl yrounded-md ypx-12 ypy-4 ybg-black ytext-white">Batafsil</Link>
         </div>
       </section>
       <HomeForm />

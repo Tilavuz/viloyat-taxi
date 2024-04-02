@@ -11,7 +11,8 @@ const UserSchema = new Schema({
     admin: {
         type: Boolean,
         default: false
-    }
+    },
+    loginCode: String
 })
 
 const User = model("User", UserSchema)

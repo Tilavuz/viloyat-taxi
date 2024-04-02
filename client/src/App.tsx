@@ -11,6 +11,7 @@ const Taxis = lazy( () => import("./pages/taxis"));
 const About = lazy(() => import("./pages/about"));
 const Passenger =lazy(() => import("./pages/passenger"))
 const Login = lazy(() => import("./pages/login"))
+const UserProfile = lazy(() => import("./pages/user-profile"))
 
 // Loader components
 import Loader from "./components/loader/loader";
@@ -56,6 +57,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loader />}>
             <Passenger />
+          </Suspense>
+        )
+      },
+      {
+        path: '/profile',
+        element: (
+          <Suspense fallback={<Loader />}>
+            <UserProfile />
           </Suspense>
         )
       }
